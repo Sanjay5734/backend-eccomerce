@@ -7,13 +7,31 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
-const url = "https://shop-ecommerce-8c9b.onrender.com"
+const url = "https://shop-ecommerce-gamma.vercel.app";
 const { type } = require("os");
 const { stringify } = require("querystring");
 const { log } = require("console");
 
 app.use(express.json());
-app.use(cors({ origin: "https://shop-ecommerce-8c9b.onrender.com" }));
+// app.use(cors({ origin: "https://shop-ecommerce-gamma.vercel.app" }));
+const allowedOrigins = [
+  "https://shop-ecommerce-gamma.vercel.app",
+  "https://shop-ecommerce-8c9b.onrender.com",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed for this origin"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 // app.use(cors());
 
 //Database connected with path e-commerse
@@ -41,10 +59,18 @@ const upload = multer({ storage: storage });
 //Creating upload Endpoint for images
 app.use("/images", express.static("upload/images"));
 
+// app.post("/upload", upload.single("product"), (req, res) => {
+//   res.json({
+//     success: 1,
+//     image_url: `${url}/images/${req.file.filename}`,
+//   });
+// });
+const backendUrl = "https://backend-ecommerce-oyd3.onrender.com";
+
 app.post("/upload", upload.single("product"), (req, res) => {
   res.json({
     success: 1,
-    image_url: url+/images/+req.file.filename,
+    image_url: `${backendUrl}/images/${req.file.filename}`,
   });
 });
 
@@ -271,3 +297,4 @@ app.listen(port, (error) => {
     console.log("Error : " + error);
   }
 });
+
