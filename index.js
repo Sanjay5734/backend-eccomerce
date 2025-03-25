@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
-
+const url = "https://shop-ecommerce-8c9b.onrender.com"
 const { type } = require("os");
 const { stringify } = require("querystring");
 const { log } = require("console");
@@ -189,7 +189,7 @@ app.post("/login", async (req, res) => {
           id: user.id,
         },
       };
-      const token = jwt.sign(data, "secret_ecom");
+      const token = jwt.sign(data, process.env.JWT_SECRET);
       res.json({ success: true, token });
     } else {
       res.json({ success: false, errors: "Wrong Password" });
